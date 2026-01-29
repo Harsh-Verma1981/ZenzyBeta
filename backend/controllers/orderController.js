@@ -65,10 +65,10 @@ const createOrder = async (req, res) => {
       user: req.user._id,
       shippingAddress,
       paymentMethod,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
+      itemsPrice: Number(itemsPrice),
+      taxPrice: Number(taxPrice),
+      shippingPrice: Number(shippingPrice),
+      totalPrice: Number(totalPrice),
     });
 
     const createdOrder = await order.save();
@@ -126,7 +126,7 @@ const calcualteTotalSalesByDate = async (req, res) => {
       {
         $group: {
           _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$paidAt" },
+            $dateToString: { format: "%Y-%m-%d", date: { $ifNull: ["$paidAt", "$createdAt"] }, },
           },
           totalSales: { $sum: "$totalPrice" },
         },
