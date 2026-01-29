@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import AdminMenu from "./AdminMenu";
 import OrderList from "./OrderList";
 import Loader from "../../components/Loader";
+// import ApexCharts from "apexcharts";
 
 const AdminDashboard = () => {
   const { data: sales, isLoading } = useGetTotalSalesQuery();
@@ -40,7 +41,7 @@ const AdminDashboard = () => {
         borderColor: "#ccc",
       },
       markers: {
-        size: 1,
+        size: 5,
       },
       xaxis: {
         categories: [],
@@ -88,6 +89,31 @@ const AdminDashboard = () => {
     }
   }, [salesDetail]);
 
+  useEffect(() => {
+  if (salesDetail && salesDetail.length > 0) {
+    const dates = salesDetail.map(item => String(item._id));
+    const salesValues = salesDetail.map(item => Number(item.totalSales));
+
+    setState(prevState => ({
+      ...prevState,
+      options: {
+        ...prevState.options,
+        xaxis: {
+          ...prevState.options.xaxis,
+          categories: dates,
+        },
+      },
+      series: [
+        {
+          name: "Sales",
+          data: salesValues,
+        },
+      ],
+    }));
+  }
+}, [salesDetail]);
+
+
   return (
     <>
       <AdminMenu />
@@ -130,8 +156,9 @@ const AdminDashboard = () => {
           <Chart
             options={state.options}
             series={state.series}
-            type="bar"
-            width="70%"
+            type="line"
+            width="80%"
+            height={350}
           />
         </div>
 
