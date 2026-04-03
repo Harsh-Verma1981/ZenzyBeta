@@ -16,6 +16,8 @@ import { logout } from "../../redux/features/auth/authSlice";
 import FavoritesCount from "../Products/FavoritesCount";
 
 const Navigation = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,14 +29,6 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
-
-  // Add this line to get the favorites from your Redux state
-  const favorites = useSelector((state) => state.favorites || []); 
-  
-  const { userInfo } = useSelector((state) => state.auth);
-  const { cartItems } = useSelector((state) => state.cart);
-
-  // ... rest of your state (dropdownOpen, mobileMenuOpen, etc.)
 
   const logoutHandler = async () => {
     try {
@@ -118,7 +112,7 @@ const Navigation = () => {
               )}
             </Link>
 
-            {/* <Link
+            <Link
               to="/favorite"
               onClick={closeMobileMenu}
               className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors"
@@ -126,29 +120,7 @@ const Navigation = () => {
               <FaHeart size={18} className="text-pink-400" />
               <span className="text-base font-medium">Favorites</span>
               <FavoritesCount />
-            </Link> */}
-
-            {/* // 1. First, make sure you have access to the favorites state at the top of Navigation.jsx
-              const favorites = useSelector((state) => state.favorites || []); 
-
-                // 2. Then, update the Link block like this: */}
-          <Link
-            to="/favorite"
-            onClick={closeMobileMenu}
-            className="flex items-center justify-between w-full py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <FaHeart size={18} className="text-pink-400" />
-              <span className="text-base font-medium">Favorites</span>
-            </div>
-
-            {/* ONLY render the span if there are items, preventing the "pink line" bug */}
-            {favorites.length > 0 && (
-              <span className="ml-auto bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {favorites.length}
-              </span>
-            )}
-          </Link>
+            </Link>
           </nav>
         </div>
 

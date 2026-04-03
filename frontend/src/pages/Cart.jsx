@@ -43,7 +43,7 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div
                 key={item._id}
-                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4 p-4 border rounded-lg bg-white shadow-sm"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4 p-4 rounded-lg bg-gray-800 shadow-sm"
               >
                 <div className="w-full sm:w-20 h-20 flex-shrink-0">
                   <img
@@ -60,8 +60,8 @@ const Cart = () => {
                   >
                     {item.name}
                   </Link>
-                  <div className="text-gray-600 text-sm mt-1">{item.brand}</div>
-                  <div className="text-gray-900 font-bold text-base md:text-lg mt-1">
+                  <div className="text-white text-sm mt-1">{item.brand}</div>
+                  <div className="text-black font-bold text-base md:text-lg mt-1">
                     ${item.price.toFixed(2)}
                   </div>
                 </div>
@@ -96,7 +96,7 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="w-full lg:w-1/3">
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+            <div className="bg-gray-800 p-6 rounded-lg shadow-sm">
               <h2 className="text-xl font-semibold mb-4">
                 Order Summary
               </h2>

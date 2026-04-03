@@ -1,18 +1,17 @@
+// src/pages/Products/FavoritesCount.jsx
 import { useSelector } from "react-redux";
 
 const FavoritesCount = () => {
   const favorites = useSelector((state) => state.favorites);
   const favoriteCount = favorites.length;
 
-  return (
-    <div className="absolute left-2 top-8">
-      {favoriteCount > 0 && (
-        <span className="px-1 py-0 text-sm text-white bg-pink-500 rounded-full">
-          {favoriteCount}
-        </span>
-      )}
-    </div>
-  );
+  // If there are no favorites, don't render anything
+  if (favoriteCount === 0) {
+    return null;
+  }
+
+  // ONLY return the number, no wrapping div/span or styles here
+  return <>{favoriteCount}</>;
 };
 
 export default FavoritesCount;

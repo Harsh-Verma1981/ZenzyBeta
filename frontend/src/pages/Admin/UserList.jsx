@@ -72,9 +72,9 @@ const UserList = () => {
 
       <h1 className="text-2xl md:text-3xl font-bold mb-6">User Management</h1>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+      <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-lg">
         <table className="w-full min-w-[800px]">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 text-black">
             <tr>
               <th className="px-4 py-3 text-left">ID</th>
               <th className="px-4 py-3 text-left">Name</th>
@@ -85,7 +85,7 @@ const UserList = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id} className="border-t hover:bg-gray-50">
+              <tr key={user._id} className="border-t hover:bg-gray-50 hover:text-blue-400">
                 <td className="px-4 py-3 font-mono text-sm">
                   {user._id.substring(0, 8)}...
                 </td>

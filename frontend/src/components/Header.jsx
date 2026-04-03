@@ -6,31 +6,28 @@ import ProductCarousel from "../pages/Products/ProductCarousel";
 const Header = () => {
   const { data, isLoading, error } = useGetTopProductsQuery();
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (error) {
-    return <h1>ERROR</h1>;
-  }
+  if (isLoading) return <Loader />;
+  if (error) return <h1 className="text-white text-center">ERROR</h1>;
 
   return (
-    <>
-      <div className="flex flex-col xl:flex-row justify-around items-center p-4">
-        <div className="hidden xl:block w-full xl:w-1/3 mb-4 xl:mb-0">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {data.map((product) => (
-              <div key={product._id}>
-                <SmallProduct product={product} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-full xl:w-1/2">
-          <ProductCarousel />
+    <div className="flex flex-col xl:flex-row gap-6 w-full px-2">
+      {/* 1. SMALL PRODUCTS GRID */}
+      {/* Changed 'hidden' to 'flex' and used grid logic to show them on all screens */}
+      <div className="w-full xl:w-[45%] order-2 xl:order-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-2 gap-4">
+          {data.map((product) => (
+            <div key={product._id} className="flex justify-center">
+              <SmallProduct product={product} />
+            </div>
+          ))}
         </div>
       </div>
-    </>
+
+      {/* 2. MAIN CAROUSEL */}
+      <div className="w-full xl:w-[55%] order-1 xl:order-2">
+        <ProductCarousel />
+      </div>
+    </div>
   );
 };
 

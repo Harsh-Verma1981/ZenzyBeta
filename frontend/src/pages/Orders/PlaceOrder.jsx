@@ -52,9 +52,9 @@ const PlaceOrder = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Order Items Table */}
             <div className="w-full lg:w-2/3 overflow-x-auto">
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden">
                 <table className="w-full min-w-[600px]">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-gray-100 text-black">
                     <tr>
                       <th className="px-4 py-3 text-left">Image</th>
                       <th className="px-4 py-3 text-left">Product</th>
@@ -95,7 +95,7 @@ const PlaceOrder = () => {
 
             {/* Order Summary */}
             <div className="w-full lg:w-1/3">
-              <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <div className="bg-gray-800 p-6 rounded-lg shadow-sm">
                 <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
                 <div className="space-y-4 mb-6">

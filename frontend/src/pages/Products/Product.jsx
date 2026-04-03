@@ -14,9 +14,9 @@ const Product = ({ product }) => {
         <HeartIcon product={product} />
       </div>
 
-      <div className="p-4 bg-white">
+      <div className="p-4 bg-gray-800 text-white">
         <Link to={`/product/${product._id}`}>
-          <h2 className="flex justify-between items-center text-gray-800">
+          <h2 className="flex justify-between items-center text-white">
             <div className="font-semibold text-lg truncate">{product.name}</div>
             <span className="bg-pink-100 text-pink-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
               ${product.price}

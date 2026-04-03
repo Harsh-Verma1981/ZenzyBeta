@@ -29,7 +29,7 @@ const AdminDashboard = () => {
         background: "transparent",
         fontFamily: "inherit",
       },
-      tooltip: { theme: "dark" },
+      tooltip: { theme: "light" },
       colors: ["#e11d48"],
       dataLabels: { enabled: true },
       stroke: { curve: "smooth", width: 3 },
@@ -120,7 +120,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Sales Chart */}
-          <div className="bg-gray-400 rounded-xl shadow-lg p-6 mb-8">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
             <div className="overflow-x-auto">
               <Chart
                 options={state.options}
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Recent Orders */}
-          <div className="bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Orders</h2>
             <OrderList embedded />
           </div>

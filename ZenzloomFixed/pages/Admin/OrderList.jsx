@@ -18,10 +18,10 @@ const OrderList = ({ embedded = false }) => {
 
   const content = (
     <div className="overflow-x-auto">
-      {!embedded && <h2 className="text-2xl font-bold mb-6 text-black">Order List</h2>}
-      <div className="bg-gray-800 rounded-lg shadow-lg overflow-x-auto">
-        <table className="w-full min-w-[700px] text-white">
-          <thead className="bg-gray-100 text-black">
+      {!embedded && <h2 className="text-2xl font-bold mb-6 text-white">Order List</h2>}
+      <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
+        <table className="w-full min-w-[700px] text-gray-800">
+          <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-3 text-left text-sm">Items</th>
               <th className="px-4 py-3 text-left text-sm">ID</th>
@@ -35,7 +35,7 @@ const OrderList = ({ embedded = false }) => {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id} className="border-t hover:bg-gray-50 hover:text-black transition-colors">
+              <tr key={order._id} className="border-t hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3">
                   {order.orderItems.length > 0 && (
                     <img
