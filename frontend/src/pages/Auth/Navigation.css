@@ -1,14 +1,14 @@
 #navigation-container {
-  width: 16rem;
-  transition: width 0.3s ease-in-out;
-  overflow: hidden;
+  width: 16rem; /* Fixed width - no hover expansion */
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
 }
 
-/* Mobile styles */
+/* Mobile: off-canvas by default */
 @media (max-width: 1023px) {
   #navigation-container {
-    width: 16rem;
     transform: translateX(-100%);
+    width: 16rem;
   }
 
   #navigation-container.mobile-open {
@@ -16,41 +16,22 @@
   }
 }
 
-/* Desktop styles */
+/* Desktop: always visible, fixed width */
 @media (min-width: 1024px) {
   #navigation-container {
-    width: 4%;
-  }
-
-  #navigation-container:hover {
-    width: 15%;
+    transform: translateX(0) !important;
+    width: 16rem;
   }
 }
 
-/* Hide nav-item-name by default on desktop, show on hover */
+/* Show nav-item-name always (not on hover) */
 .nav-item-name {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-#navigation-container:hover .nav-item-name {
   display: inline;
   opacity: 1;
 }
 
-/* Search styles */
-.search-input {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-#navigation-container:hover .search-input {
-  display: block;
-  opacity: 1;
-}
-
-#navigation-container:hover .search-icon {
+/* Hide search-related styles (not used) */
+.search-input,
+.search-icon {
   display: none;
 }
