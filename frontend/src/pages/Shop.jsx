@@ -34,17 +34,14 @@ const Shop = () => {
   useEffect(() => {
     if (!checked.length || !radio.length) {
       if (!filteredProductsQuery.isLoading) {
-        // Filter products based on both checked categories and price filter
-        const filteredProducts = filteredProductsQuery.data.filter(
+        const filteredProducts = filteredProductsQuery.data?.filter(
           (product) => {
-            // Check if the product price includes the entered price filter value
             return (
               product.price.toString().includes(priceFilter) ||
               product.price === parseInt(priceFilter, 10)
             );
           }
         );
-
         dispatch(setProducts(filteredProducts));
       }
     }
@@ -64,7 +61,6 @@ const Shop = () => {
     dispatch(setChecked(updatedChecked));
   };
 
-  // Add "All Brands" option to uniqueBrands
   const uniqueBrands = [
     ...Array.from(
       new Set(
@@ -76,109 +72,104 @@ const Shop = () => {
   ];
 
   const handlePriceChange = (e) => {
-    // Update the price filter state when the user types in the input filed
     setPriceFilter(e.target.value);
   };
 
   return (
-    <>
-      <div className="container mx-auto">
-        <div className="flex md:flex-row">
-          <div className="bg-[#151515] p-3 mt-2 mb-2">
-            <h2 className="h4 text-center py-2 bg-black rounded-full mb-2">
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Filters Sidebar */}
+        <div className="w-full lg:w-64 flex-shrink-0">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md sticky top-4">
+            <h2 className="text-lg font-semibold text-center text-white py-2 bg-gray-900 rounded-full mb-4">
               Filter by Categories
             </h2>
-
-            <div className="p-5 w-[15rem]">
+            <div className="space-y-2 mb-6">
               {categories?.map((c) => (
-                <div key={c._id} className="mb-2">
-                  <div className="flex ietms-center mr-4">
-                    <input
-                      type="checkbox"
-                      id="red-checkbox"
-                      onChange={(e) => handleCheck(e.target.checked, c._id)}
-                      className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 dark:focus:ring-pink-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-
-                    <label
-                      htmlFor="pink-checkbox"
-                      className="ml-2 text-sm font-medium text-white dark:text-gray-300"
-                    >
-                      {c.name}
-                    </label>
-                  </div>
+                <div key={c._id} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`category-${c._id}`}
+                    onChange={(e) => handleCheck(e.target.checked, c._id)}
+                    className="w-4 h-4 text-pink-500 bg-gray-100 border-gray-300 rounded focus:ring-pink-500"
+                  />
+                  <label
+                    htmlFor={`category-${c._id}`}
+                    className="ml-2 text-sm font-medium text-white"
+                  >
+                    {c.name}
+                  </label>
                 </div>
               ))}
             </div>
 
-            <h2 className="h4 text-center py-2 bg-black rounded-full mb-2">
+            <h2 className="text-lg font-semibold text-center text-white py-2 bg-gray-900 rounded-full mb-4">
               Filter by Brands
             </h2>
-
-            <div className="p-5">
+            <div className="space-y-3 mb-6">
               {uniqueBrands?.map((brand) => (
-                <>
-                  <div className="flex items-enter mr-4 mb-5">
-                    <input
-                      type="radio"
-                      id={brand}
-                      name="brand"
-                      onChange={() => handleBrandClick(brand)}
-                      className="w-4 h-4 text-pink-400 bg-gray-100 border-gray-300 focus:ring-pink-500 dark:focus:ring-pink-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-
-                    <label
-                      htmlFor="pink-radio"
-                      className="ml-2 text-sm font-medium text-white dark:text-gray-300"
-                    >
-                      {brand}
-                    </label>
-                  </div>
-                </>
+                <div key={brand} className="flex items-center">
+                  <input
+                    type="radio"
+                    id={`brand-${brand}`}
+                    name="brand"
+                    onChange={() => handleBrandClick(brand)}
+                    className="w-4 h-4 text-pink-500 bg-gray-100 border-gray-300 focus:ring-pink-500"
+                  />
+                  <label
+                    htmlFor={`brand-${brand}`}
+                    className="ml-2 text-sm font-medium text-white"
+                  >
+                    {brand}
+                  </label>
+                </div>
               ))}
             </div>
 
-            <h2 className="h4 text-center py-2 bg-black rounded-full mb-2">
-              Filer by Price
+            <h2 className="text-lg font-semibold text-center text-white py-2 bg-gray-900 rounded-full mb-4">
+              Filter by Price
             </h2>
-
-            <div className="p-5 w-[15rem]">
+            <div className="mb-6">
               <input
                 type="text"
                 placeholder="Enter Price"
                 value={priceFilter}
                 onChange={handlePriceChange}
-                className="w-full px-3 py-2 placeholder-gray-400 border rounded-lg focus:outline-none focus:ring focus:border-pink-300"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
               />
             </div>
 
-            <div className="p-5 pt-0">
-              <button
-                className="w-full border my-4"
-                onClick={() => window.location.reload()}
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-
-          <div className="p-3">
-            <h2 className="h4 text-center mb-2">{products?.length} Products</h2>
-            <div className="flex flex-wrap">
-              {products.length === 0 ? (
-                <Loader />
-              ) : (
-                products?.map((p) => (
-                  <div className="p-3" key={p._id}>
-                    <ProductCard p={p} />
-                  </div>
-                ))
-              )}
-            </div>
+            <button
+              className="w-full border py-2 px-4 text-white hover:bg-gray-700 transition-colors"
+              onClick={() => window.location.reload()}
+            >
+              Reset Filters
+            </button>
           </div>
         </div>
+
+        {/* Products Grid */}
+        <div className="flex-1">
+          <h2 className="text-xl font-bold mb-4">
+            {products?.length || 0} Products
+          </h2>
+
+          {filteredProductsQuery.isLoading ? (
+            <Loader />
+          ) : products?.length === 0 ? (
+            <div className="text-center py-12 bg-gray-100 rounded-lg">
+              <p className="text-gray-500">No products found</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+              {products?.map((p) => (
+                <ProductCard key={p._id} p={p} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

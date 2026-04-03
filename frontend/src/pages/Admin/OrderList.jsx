@@ -7,86 +7,96 @@ import AdminMenu from "./AdminMenu";
 const OrderList = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
 
-  return (
-    <>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
-      ) : (
-        <table className="container mx-auto">
-          <AdminMenu />
+  if (isLoading) return <Loader />;
+  if (error)
+    return (
+      <Message variant="danger">
+        {error?.data?.message || error.error}
+      </Message>
+    );
 
-          <thead className="w-full border">
-            <tr className="mb-[5rem]">
-              <th className="text-left pl-1">ITEMS</th>
-              <th className="text-left pl-1">ID</th>
-              <th className="text-left pl-1">USER</th>
-              <th className="text-left pl-1">DATA</th>
-              <th className="text-left pl-1">TOTAL</th>
-              <th className="text-left pl-1">PAID</th>
-              <th className="text-left pl-1">DELIVERED</th>
-              <th></th>
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <AdminMenu />
+
+      <h2 className="text-2xl font-bold mb-6">Order List</h2>
+
+      <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+        <table className="w-full min-w-[800px]">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 text-left">Items</th>
+              <th className="px-4 py-3 text-left">ID</th>
+              <th className="px-4 py-3 text-left">User</th>
+              <th className="px-4 py-3 text-left">Date</th>
+              <th className="px-4 py-3 text-right">Total</th>
+              <th className="px-4 py-3 text-center">Paid</th>
+              <th className="px-4 py-3 text-center">Delivered</th>
+              <th className="px-4 py-3 text-center">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
-                <td>
-                  <img
-                    src={order.orderItems[0].image}
-                    alt={order._id}
-                    className="w-[5rem] pt-4"
-                  />
-                </td>
-                <td>{order._id}</td>
-
-                <td>{order.user ? order.user.username : "N/A"}</td>
-
-                <td>
-                  {order.createdAt ? order.createdAt.substring(0, 10) : "N/A"}
-                </td>
-
-                <td>$ {order.totalPrice}</td>
-
-                <td className="py-2">
-                  {order.isPaid ? (
-                    <p className="p-1 text-center bg-green-400 w-[6rem] rounded-full">
-                      Completed
-                    </p>
-                  ) : (
-                    <p className="p-1 text-center bg-red-400 w-[6rem] rounded-full">
-                      Pending
-                    </p>
+              <tr key={order._id} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-3">
+                  {order.orderItems.length > 0 && (
+                    <img
+                      src={order.orderItems[0].image}
+                      alt={order._id}
+                      className="w-16 h-16 object-cover rounded"
+                    />
                   )}
                 </td>
-
-                <td className="px-2 py-2">
-                  {order.isDelivered ? (
-                    <p className="p-1 text-center bg-green-400 w-[6rem] rounded-full">
-                      Completed
-                    </p>
-                  ) : (
-                    <p className="p-1 text-center bg-red-400 w-[6rem] rounded-full">
-                      Pending
-                    </p>
-                  )}
+                <td className="px-4 py-3 font-mono text-sm">
+                  {order._id.substring(0, 8)}...
                 </td>
-
-                <td>
-                  <Link to={`/order/${order._id}`}>
-                    <button>More</button>
+                <td className="px-4 py-3">
+                  {order.user ? order.user.username : "N/A"}
+                </td>
+                <td className="px-4 py-3">
+                  {order.createdAt
+                    ? new Date(order.createdAt).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td className="px-4 py-3 text-right font-semibold">
+                  ${order.totalPrice.toFixed(2)}
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                      order.isPaid
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {order.isPaid ? "Completed" : "Pending"}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                      order.isDelivered
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {order.isDelivered ? "Completed" : "Pending"}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <Link
+                    to={`/order/${order._id}`}
+                    className="text-pink-600 hover:text-pink-700 font-semibold text-sm"
+                  >
+                    View
                   </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 

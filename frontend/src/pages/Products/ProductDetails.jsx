@@ -63,125 +63,128 @@ const ProductDetails = () => {
     navigate("/cart");
   };
 
+  if (isLoading) return <Loader />;
+  if (error)
+    return (
+      <Message variant="danger">
+        {error?.data?.message || error.message}
+      </Message>
+    );
+
   return (
-    <>
-      <div>
-        <Link
-          to="/"
-          className="text-white font-semibold hover:underline ml-[10rem]"
-        >
-          Go Back
-        </Link>
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <Link to="/" className="text-pink-600 hover:text-pink-700 font-semibold mb-6 inline-block">
+        ← Go Back
+      </Link>
 
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.message}
-        </Message>
-      ) : (
-        <>
-          <div className="flex flex-wrap relative items-between mt-[2rem] ml-[10rem]">
-            <div>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full xl:w-[50rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] mr-[2rem]"
-              />
+      <div className="flex flex-col lg:flex-row gap-8 mt-6">
+        {/* Product Image */}
+        <div className="w-full lg:w-1/2 flex justify-center">
+          <div className="relative">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full max-w-lg h-auto object-cover rounded-lg shadow-lg"
+            />
+            <HeartIcon product={product} />
+          </div>
+        </div>
 
-              <HeartIcon product={product} />
-            </div>
+        {/* Product Info */}
+        <div className="w-full lg:w-1/2">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">{product.name}</h2>
+          <p className="text-gray-600 mb-6 text-lg leading-relaxed">
+            {product.description}
+          </p>
 
-            <div className="flex flex-col justify-between">
-              <h2 className="text-2xl font-semibold">{product.name}</h2>
-              <p className="my-4 xl:w-[35rem] lg:w-[35rem] md:w-[30rem] text-[#B0B0B0]">
-                {product.description}
-              </p>
+          <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-6">
+            ${product.price.toFixed(2)}
+          </div>
 
-              <p className="text-5xl my-4 font-extrabold">$ {product.price}</p>
-
-              <div className="flex items-center justify-between w-[20rem]">
-                <div className="one">
-                  <h1 className="flex items-center mb-6">
-                    <FaStore className="mr-2 text-white" /> Brand:{" "}
-                    {product.brand}
-                  </h1>
-                  <h1 className="flex items-center mb-6 w-[20rem]">
-                    <FaClock className="mr-2 text-white" /> Added:{" "}
-                    {moment(product.createAt).fromNow()}
-                  </h1>
-                  <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Reviews:{" "}
-                    {product.numReviews}
-                  </h1>
-                </div>
-
-                <div className="two">
-                  <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Ratings: {rating}
-                  </h1>
-                  <h1 className="flex items-center mb-6">
-                    <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}
-                    {product.quantity}
-                  </h1>
-                  <h1 className="flex items-center mb-6 w-[10rem]">
-                    <FaBox className="mr-2 text-white" /> In Stock:{" "}
-                    {product.countInStock}
-                  </h1>
-                </div>
-              </div>
-
-              <div className="flex justify-between flex-wrap">
-                <Ratings
-                  value={product.rating}
-                  text={`${product.numReviews} reviews`}
-                />
-
-                {product.countInStock > 0 && (
-                  <div>
-                    <select
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
-                      className="p-2 w-[6rem] rounded-lg text-black"
-                    >
-                      {[...Array(product.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-
-              <div className="btn-container">
-                <button
-                  onClick={addToCartHandler}
-                  disabled={product.countInStock === 0}
-                  className="bg-pink-600 text-white py-2 px-4 rounded-lg mt-4 md:mt-0"
-                >
-                  Add To Cart
-                </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+              <FaStore className="text-pink-600 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Brand</p>
+                <p className="font-semibold">{product.brand}</p>
               </div>
             </div>
 
-            <div className="mt-[5rem] container flex flex-wrap items-start justify-between ml-[10rem]">
-              <ProductTabs
-                loadingProductReview={loadingProductReview}
-                userInfo={userInfo}
-                submitHandler={submitHandler}
-                rating={rating}
-                setRating={setRating}
-                comment={comment}
-                setComment={setComment}
-                product={product}
-              />
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+              <FaClock className="text-pink-600 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Added</p>
+                <p className="font-semibold">{moment(product.createAt).fromNow()}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+              <FaStar className="text-pink-600 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Reviews</p>
+                <p className="font-semibold">{product.numReviews}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+              <FaBox className="text-pink-600 text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">In Stock</p>
+                <p className="font-semibold">{product.countInStock}</p>
+              </div>
             </div>
           </div>
-        </>
-      )}
-    </>
+
+          <div className="mb-6">
+            <label className="block text-gray-700 mb-2">Quantity</label>
+            <select
+              value={qty}
+              onChange={(e) => setQty(e.target.value)}
+              className="p-3 w-24 border rounded-lg bg-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              disabled={product.countInStock === 0}
+            >
+              {[...Array(product.countInStock).keys()].map((x) => (
+                <option key={x + 1} value={x + 1}>
+                  {x + 1}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
+            <Ratings
+              value={product.rating}
+              text={`${product.numReviews} reviews`}
+            />
+          </div>
+
+          {product.countInStock > 0 ? (
+            <button
+              onClick={addToCartHandler}
+              className="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white py-3 px-8 rounded-lg font-semibold transition-colors"
+            >
+              Add To Cart
+            </button>
+          ) : (
+            <p className="text-red-500 font-semibold">Out of Stock</p>
+          )}
+        </div>
+      </div>
+
+      {/* Product Tabs */}
+      <div className="mt-12">
+        <ProductTabs
+          loadingProductReview={loadingProductReview}
+          userInfo={userInfo}
+          submitHandler={submitHandler}
+          rating={rating}
+          setRating={setRating}
+          comment={comment}
+          setComment={setComment}
+          product={product}
+        />
+      </div>
+    </div>
   );
 };
 

@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import AdminMenu from "./AdminMenu";
 import OrderList from "./OrderList";
 import Loader from "../../components/Loader";
-// import ApexCharts from "apexcharts";
 
 const AdminDashboard = () => {
   const { data: sales, isLoading } = useGetTotalSalesQuery();
@@ -22,11 +21,14 @@ const AdminDashboard = () => {
     options: {
       chart: {
         type: "line",
+        toolbar: {
+          show: false,
+        },
       },
       tooltip: {
         theme: "dark",
       },
-      colors: ["#00E396"],
+      colors: ["#e11d48"],
       dataLabels: {
         enabled: true,
       },
@@ -38,7 +40,7 @@ const AdminDashboard = () => {
         align: "left",
       },
       grid: {
-        borderColor: "#ccc",
+        borderColor: "#e5e7eb",
       },
       markers: {
         size: 5,
@@ -51,119 +53,127 @@ const AdminDashboard = () => {
       },
       yaxis: {
         title: {
-          text: "Sales",
+          text: "Sales (USD)",
         },
         min: 0,
       },
       legend: {
         position: "top",
         horizontalAlign: "right",
-        floating: true,
         offsetY: -25,
         offsetX: -5,
       },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
     },
     series: [{ name: "Sales", data: [] }],
   });
 
   useEffect(() => {
-    if (salesDetail) {
-      const formattedSalesDate = salesDetail.map((item) => ({
-        x: item._id,
-        y: item.totalSales,
-      }));
+    if (salesDetail && salesDetail.length > 0) {
+      const dates = salesDetail.map((item) => String(item._id));
+      const salesValues = salesDetail.map((item) => Number(item.totalSales));
 
       setState((prevState) => ({
         ...prevState,
         options: {
           ...prevState.options,
           xaxis: {
-            categories: formattedSalesDate.map((item) => item.x),
+            categories: dates,
           },
         },
-
         series: [
-          { name: "Sales", data: formattedSalesDate.map((item) => item.y) },
+          {
+            name: "Sales",
+            data: salesValues,
+          },
         ],
       }));
     }
   }, [salesDetail]);
 
-  useEffect(() => {
-  if (salesDetail && salesDetail.length > 0) {
-    const dates = salesDetail.map(item => String(item._id));
-    const salesValues = salesDetail.map(item => Number(item.totalSales));
-
-    setState(prevState => ({
-      ...prevState,
-      options: {
-        ...prevState.options,
-        xaxis: {
-          ...prevState.options.xaxis,
-          categories: dates,
-        },
-      },
-      series: [
-        {
-          name: "Sales",
-          data: salesValues,
-        },
-      ],
-    }));
-  }
-}, [salesDetail]);
-
-
   return (
     <>
       <AdminMenu />
 
-      <section className="xl:ml-[4rem] md:ml-[0rem]">
-        <div className="w-[80%] flex justify-around flex-wrap">
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
-              $
+      <section className="xl:ml-[4rem] md:ml-0 mt-6">
+        <div className="container mx-auto px-4">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Total Sales</p>
+                  <h2 className="text-2xl font-bold text-white">
+                    {isLoading ? (
+                      <Loader />
+                    ) : (
+                      `$${sales?.totalSales?.toFixed(2) || "0.00"}`
+                    )}
+                  </h2>
+                </div>
+                <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  $
+                </div>
+              </div>
             </div>
 
-            <p className="mt-5">Sales</p>
-            <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : sales.totalSales.toFixed(2)}
-            </h1>
-          </div>
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
-              $
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Customers</p>
+                  <h2 className="text-2xl font-bold text-white">
+                    {loading ? <Loader /> : customers?.length || 0}
+                  </h2>
+                </div>
+                <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  #
+                </div>
+              </div>
             </div>
 
-            <p className="mt-5">Customers</p>
-            <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : customers?.length}
-            </h1>
-          </div>
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
-              $
+            <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Total Orders</p>
+                  <h2 className="text-2xl font-bold text-white">
+                    {loadingTwo ? <Loader /> : orders?.totalOrders || 0}
+                  </h2>
+                </div>
+                <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  📦
+                </div>
+              </div>
             </div>
-
-            <p className="mt-5">All Orders</p>
-            <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : orders?.totalOrders}
-            </h1>
           </div>
-        </div>
 
-        <div className="ml-[10rem] mt-[4rem]">
-          <Chart
-            options={state.options}
-            series={state.series}
-            type="line"
-            width="80%"
-            height={350}
-          />
-        </div>
+          {/* Sales Chart */}
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 className="text-xl font-bold mb-6">Sales Trend</h2>
+            <div className="overflow-x-auto">
+              <Chart
+                options={state.options}
+                series={state.series}
+                type="line"
+                height={350}
+                width="100%"
+              />
+            </div>
+          </div>
 
-        <div className="mt-[4rem]">
-          <OrderList />
+          {/* Recent Orders */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold mb-6">Recent Orders</h2>
+            <OrderList />
+          </div>
         </div>
       </section>
     </>

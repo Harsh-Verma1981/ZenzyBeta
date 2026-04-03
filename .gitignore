@@ -2,3 +2,4 @@
 .env
 # resticting example env file
 example-env.env
+.claude

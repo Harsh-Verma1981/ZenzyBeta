@@ -8,8 +8,7 @@ import {
   useUpdateUserMutation,
 } from "../../redux/api/usersApiSlice";
 import { toast } from "react-toastify";
-// ⚠️⚠️⚠️ don't forget this ⚠️⚠️⚠️⚠️
-// import AdminMenu from "./AdminMenu";
+import AdminMenu from "./AdminMenu";
 
 const UserList = () => {
   const { data: users, refetch, isLoading, error } = useGetUsersQuery();
@@ -27,10 +26,11 @@ const UserList = () => {
   }, [refetch]);
 
   const deleteHandler = async (id) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await deleteUser(id);
+        await deleteUser(id).unwrap();
         refetch();
+        toast.success("User deleted successfully");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -49,123 +49,142 @@ const UserList = () => {
         userId: id,
         username: editableUserName,
         email: editableUserEmail,
-      });
+      }).unwrap();
       setEditableUserId(null);
       refetch();
+      toast.success("User updated successfully");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
 
+  if (isLoading) return <Loader />;
+  if (error)
+    return (
+      <Message variant="danger">
+        {error?.data?.message || error.error}
+      </Message>
+    );
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">Users</h1>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
-      ) : (
-        <div className="flex flex-col md:flex-row">
-          {/* <AdminMenu /> */}
-          <table className="w-full md:w-4/5 mx-auto">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left">ID</th>
-                <th className="px-4 py-2 text-left">NAME</th>
-                <th className="px-4 py-2 text-left">EMAIL</th>
-                <th className="px-4 py-2 text-left">ADMIN</th>
-                <th className="px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td className="px-4 py-2">{user._id}</td>
-                  <td className="px-4 py-2">
-                    {editableUserId === user._id ? (
-                      <div className="flex items-center">
-                        <input
-                          type="text"
-                          value={editableUserName}
-                          onChange={(e) => setEditableUserName(e.target.value)}
-                          className="w-full p-2 border rounded-lg"
-                        />
-                        <button
-                          onClick={() => updateHandler(user._id)}
-                          className="ml-2 bg-blue-500 text-white py-2 px-4 rounded-lg"
-                        >
-                          <FaCheck />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        {user.username}{" "}
+    <div className="container mx-auto px-4 py-8">
+      <AdminMenu />
+
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">User Management</h1>
+
+      <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+        <table className="w-full min-w-[800px]">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 text-left">ID</th>
+              <th className="px-4 py-3 text-left">Name</th>
+              <th className="px-4 py-3 text-left">Email</th>
+              <th className="px-4 py-3 text-center">Admin</th>
+              <th className="px-4 py-3 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-3 font-mono text-sm">
+                  {user._id.substring(0, 8)}...
+                </td>
+                <td className="px-4 py-3">
+                  {editableUserId === user._id ? (
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        value={editableUserName}
+                        onChange={(e) => setEditableUserName(e.target.value)}
+                        className="flex-1 p-2 border rounded-lg"
+                      />
+                      <button
+                        onClick={() => updateHandler(user._id)}
+                        className="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
+                        title="Save"
+                      >
+                        <FaCheck />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>{user.username}</span>
+                      {!user.isAdmin && (
                         <button
                           onClick={() =>
                             toggleEdit(user._id, user.username, user.email)
                           }
+                          className="text-blue-500 hover:text-blue-700"
+                          title="Edit"
                         >
-                          <FaEdit className="ml-[1rem]" />
+                          <FaEdit />
                         </button>
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {editableUserId === user._id ? (
-                      <div className="flex items-center">
-                        <input
-                          type="text"
-                          value={editableUserEmail}
-                          onChange={(e) => setEditableUserEmail(e.target.value)}
-                          className="w-full p-2 border rounded-lg"
-                        />
-                        <button
-                          onClick={() => updateHandler(user._id)}
-                          className="ml-2 bg-blue-500 text-white py-2 px-4 rounded-lg"
-                        >
-                          <FaCheck />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <a href={`mailto:${user.email}`}>{user.email}</a>{" "}
+                      )}
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  {editableUserId === user._id ? (
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="email"
+                        value={editableUserEmail}
+                        onChange={(e) => setEditableUserEmail(e.target.value)}
+                        className="flex-1 p-2 border rounded-lg"
+                      />
+                      <button
+                        onClick={() => updateHandler(user._id)}
+                        className="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
+                        title="Save"
+                      >
+                        <FaCheck />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <a
+                        href={`mailto:${user.email}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {user.email}
+                      </a>
+                      {!user.isAdmin && (
                         <button
                           onClick={() =>
-                            toggleEdit(user._id, user.name, user.email)
+                            toggleEdit(user._id, user.username, user.email)
                           }
+                          className="text-blue-500 hover:text-blue-700"
+                          title="Edit"
                         >
-                          <FaEdit className="ml-[1rem]" />
+                          <FaEdit />
                         </button>
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {user.isAdmin ? (
-                      <FaCheck style={{ color: "green" }} />
-                    ) : (
-                      <FaTimes style={{ color: "red" }} />
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {!user.isAdmin && (
-                      <div className="flex">
-                        <button
-                          onClick={() => deleteHandler(user._id)}
-                          className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      )}
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-center">
+                  {user.isAdmin ? (
+                    <FaCheck className="text-green-500 text-xl mx-auto" />
+                  ) : (
+                    <FaTimes className="text-red-500 text-xl mx-auto" />
+                  )}
+                </td>
+                <td className="px-4 py-3 text-center">
+                  {!user.isAdmin && (
+                    <button
+                      onClick={() => deleteHandler(user._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
