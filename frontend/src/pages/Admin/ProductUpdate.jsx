@@ -142,7 +142,7 @@ const AdminProductUpdate = () => {
             {image && (
               <div className="text-center">
                 <img
-                  src={image}
+                  src={"https://zenzloom-fg7a.onrender.com" + image}
                   alt="product"
                   className="block mx-auto w-full h-[40%]"
                 />

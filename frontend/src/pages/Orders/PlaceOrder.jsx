@@ -68,7 +68,7 @@ const PlaceOrder = () => {
                       <tr key={index} className="border-t">
                         <td className="px-4 py-3">
                           <img
-                            src={item.image}
+                            src={"https://zenzloom-fg7a.onrender.com" + item.image}
                             alt={item.name}
                             className="w-16 h-16 object-cover rounded"
                           />

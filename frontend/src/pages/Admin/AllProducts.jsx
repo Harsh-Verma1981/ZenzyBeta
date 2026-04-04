@@ -31,7 +31,7 @@ const AllProducts = () => {
                 >
                   <div className="flex">
                     <img
-                      src={product.image}
+                      src={"https://zenzloom-fg7a.onrender.com" + product.image}
                       alt={product.name}
                       className="w-[10rem] object-cover"
                     />

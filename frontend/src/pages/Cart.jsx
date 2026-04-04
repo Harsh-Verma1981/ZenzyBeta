@@ -47,7 +47,7 @@ const Cart = () => {
               >
                 <div className="w-full sm:w-20 h-20 flex-shrink-0">
                   <img
-                    src={item.image}
+                    src={"https://zenzloom-fg7a.onrender.com" + item.image}
                     alt={item.name}
                     className="w-full h-full object-cover rounded"
                   />

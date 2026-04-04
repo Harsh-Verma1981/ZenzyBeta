@@ -32,7 +32,7 @@ const UserOrder = () => {
             {orders.map((order) => (
               <tr key={order._id}>
                 <img
-                  src={order.orderItems[0].image}
+                  src={"https://zenzloom-fg7a.onrender.com" + order.orderItems[0].image}
                   alt={order.user}
                   className="w-[6rem] mb-5"
                 />

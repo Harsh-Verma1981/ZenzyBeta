@@ -151,7 +151,7 @@ const Order = () => {
                     {order.orderItems.map((item, index) => (
                       <tr key={index}>
                         <td className="px-4 py-3">
-                          <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded border border-gray-700" />
+                          <img src={"https://zenzloom-fg7a.onrender.com" + item.image} alt={item.name} className="w-16 h-16 object-cover rounded border border-gray-700" />
                         </td>
                         <td className="px-4 py-3">
                           <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">

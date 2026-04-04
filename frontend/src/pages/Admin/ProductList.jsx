@@ -76,7 +76,7 @@ const ProductList = () => {
           {imageUrl && (
             <div className="text-center">
               <img
-                src={imageUrl}
+                src={"https://zenzloom-fg7a.onrender.com" + imageUrl}
                 alt="product"
                 className="block mx-auto max-h-[200px]"
               />
