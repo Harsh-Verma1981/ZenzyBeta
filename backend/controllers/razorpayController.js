@@ -31,7 +31,7 @@ const createRazorpayOrder = async (req, res) => {
 
     const options = {
       amount: amount,
-      currency: "INR",
+      currency: "USD",
       receipt: orderId,
       notes: {
         orderId: orderId,
