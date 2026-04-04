@@ -27,26 +27,33 @@ const allowedOrigins = [
   "https://zenzloom-shop.vercel.app/" // Added with slash just in case
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // 1. Allow internal/mobile/tool requests (no origin)
-    if (!origin) return callback(null, true);
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // 1. Allow internal/mobile/tool requests (no origin)
+//     if (!origin) return callback(null, true);
     
-    // 2. Check if the origin matches our list
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      // 3. Fallback: If it's a sub-domain of your Vercel site, allow it
-      if (origin.includes("zenzloom-shop.vercel.app")) {
-        callback(null, true);
-      } else {
-        console.log("Blocked by CORS:", origin); // This helps you debug in Render logs
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  },
+//     // 2. Check if the origin matches our list
+//     if (allowedOrigins.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else {
+//       // 3. Fallback: If it's a sub-domain of your Vercel site, allow it
+//       if (origin.includes("zenzloom-shop.vercel.app")) {
+//         callback(null, true);
+//       } else {
+//         console.log("Blocked by CORS:", origin); // This helps you debug in Render logs
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     }
+//   },
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"]
+// }));
+
+app.use(cors({
+  origin: "https://zenzloom-shop.vercel.app", // Your live site
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
