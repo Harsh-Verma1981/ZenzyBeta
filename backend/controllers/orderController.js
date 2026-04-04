@@ -1,12 +1,5 @@
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
-import Razorpay from "razorpay"; // 1. Added Razorpay import
-
-// 2. Initialize Razorpay (Make sure these keys are in your Render Environment tab)
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 // Utility Function
 function calcPrices(orderItems) {
@@ -33,9 +26,6 @@ function calcPrices(orderItems) {
   };
 }
 
-// @desc    Create new order & Razorpay order
-// @route   POST /api/orders
-// @access  Private
 const createOrder = async (req, res) => {
   try {
     const { orderItems, shippingAddress, paymentMethod } = req.body;
@@ -70,19 +60,6 @@ const createOrder = async (req, res) => {
     const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
       calcPrices(dbOrderItems);
 
-    // 3. CREATE RAZORPAY ORDER (The Fix for the 500 error)
-    // Razorpay expects an integer in the smallest currency unit (paise/cents)
-    const amountInSmallestUnit = Math.round(Number(totalPrice) * 100);
-
-    const options = {
-      amount: amountInSmallestUnit,
-      currency: "USD", // Change to "INR" if your Razorpay dashboard is set to Rupees
-      receipt: `receipt_order_${Date.now()}`,
-    };
-
-    const razorpayOrder = await razorpay.orders.create(options);
-
-    // 4. SAVE ORDER TO MONGODB
     const order = new Order({
       orderItems: dbOrderItems,
       user: req.user._id,
@@ -92,21 +69,12 @@ const createOrder = async (req, res) => {
       taxPrice: Number(taxPrice),
       shippingPrice: Number(shippingPrice),
       totalPrice: Number(totalPrice),
-      razorpayOrderId: razorpayOrder.id, // Storing the Razorpay ID for verification later
     });
 
     const createdOrder = await order.save();
-
-    // 5. SEND BACK TO FRONTEND
-    // Frontend needs the razorpayOrder object to trigger the popup window
-    res.status(201).json({
-      order: createdOrder,
-      razorpayOrder: razorpayOrder
-    });
-
+    res.status(201).json(createdOrder);
   } catch (error) {
-    console.error("Order Creation Error:", error);
-    res.status(500).json({ error: error.message || "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
