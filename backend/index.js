@@ -21,45 +21,33 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
-
-// CORS configuration
-// const allowedOrigins = [
-//   "http://localhost:5173",                 // Allows you to still work locally
-//   "https://zenzloom-shop.vercel.app"       // YOUR NEW VERCEL URL
-// ];
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // Allow requests with no origin (like mobile apps or curl)
-//     if (!origin) return callback(null, true);
-    
-//     if (allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true, // Crucial for JWT/Cookies
-// }));
-
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://zenzloom-shop.vercel.app" // Double-check this matches your Vercel URL exactly!
+  "https://zenzloom-shop.vercel.app",
+  "https://zenzloom-shop.vercel.app/" // Added with slash just in case
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
+    // 1. Allow internal/mobile/tool requests (no origin)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin)) {
+    // 2. Check if the origin matches our list
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      // This is the line that triggered your error!
-      callback(new Error('Not allowed by CORS'));
+      // 3. Fallback: If it's a sub-domain of your Vercel site, allow it
+      if (origin.includes("zenzloom-shop.vercel.app")) {
+        callback(null, true);
+      } else {
+        console.log("Blocked by CORS:", origin); // This helps you debug in Render logs
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
