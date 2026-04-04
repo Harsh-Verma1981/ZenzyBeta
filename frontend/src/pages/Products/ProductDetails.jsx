@@ -82,7 +82,7 @@ const ProductDetails = () => {
         <div className="w-full lg:w-1/2 flex justify-center">
           <div className="relative">
             <img
-              src={product.image}
+              src={"https://zenzloom-fg7a.onrender.com" + product.image}
               alt={product.name}
               className="w-full max-w-lg h-auto object-cover rounded-lg shadow-lg"
             />

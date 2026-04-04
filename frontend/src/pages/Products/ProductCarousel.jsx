@@ -53,7 +53,7 @@ const ProductCarousel = () => {
             }) => (
               <div key={_id} className="px-2">
                 <img
-                  src={image}
+                  src={"https://zenzloom-fg7a.onrender.com" + image}
                   alt={name}
                   className="w-full rounded-lg object-cover h-[20rem] md:h-[30rem]"
                 />
