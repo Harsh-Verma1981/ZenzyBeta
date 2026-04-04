@@ -23,9 +23,28 @@ connectDB();
 const app = express();
 
 // CORS configuration
+// const allowedOrigins = [
+//   "http://localhost:5173",                 // Allows you to still work locally
+//   "https://zenzloom-shop.vercel.app"       // YOUR NEW VERCEL URL
+// ];
+
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // Allow requests with no origin (like mobile apps or curl)
+//     if (!origin) return callback(null, true);
+    
+//     if (allowedOrigins.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true, // Crucial for JWT/Cookies
+// }));
+
 const allowedOrigins = [
-  "http://localhost:5173",                 // Allows you to still work locally
-  "https://zenzloom-shop.vercel.app"       // YOUR NEW VERCEL URL
+  "http://localhost:5173",
+  "https://zenzloom-shop.vercel.app" // Double-check this matches your Vercel URL exactly!
 ];
 
 app.use(cors({
@@ -33,13 +52,14 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      // This is the line that triggered your error!
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // Crucial for JWT/Cookies
+  credentials: true,
 }));
 
 app.use(express.json());
