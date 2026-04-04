@@ -62,7 +62,7 @@ const createOrder = async (req, res) => {
 
     const order = new Order({
       orderItems: dbOrderItems,
-      user: req.user._id,
+      user: req.user ? req.user._id : null, // Safety check: If no user, set to null
       shippingAddress,
       paymentMethod,
       itemsPrice: Number(itemsPrice),
@@ -70,6 +70,11 @@ const createOrder = async (req, res) => {
       shippingPrice: Number(shippingPrice),
       totalPrice: Number(totalPrice),
     });
+
+    if (!req.user) {
+      res.status(401);
+      throw new Error("User authentication failed during order creation");
+    }
 
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
