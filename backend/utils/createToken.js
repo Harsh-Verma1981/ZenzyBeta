@@ -7,10 +7,10 @@ const generateToken = (res, userId) => {
 
   // Set JWT as an HTTP-Only Cookie
   const isProduction = process.env.NODE_ENV === "production";
-  res.cookie("jwt", token, {
+  res.cookie('jwt', token, {
     httpOnly: true,
-    secure: isProduction, // Only use secure in production
-    sameSite: isProduction ? "strict" : "lax",
+    secure: true, // MUST be true for Render (https)
+    sameSite: 'None', // MUST be 'None' for cross-site cookies (Vercel to Render)
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
