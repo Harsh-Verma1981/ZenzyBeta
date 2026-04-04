@@ -7,7 +7,7 @@ const Product = ({ product }) => {
     <div className="w-full p-3">
       <div className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <img
-          src={product.image}
+          src={"https://zenzloom-fg7a.onrender.com" + product.image}
           alt={product.name}
           className="w-full h-64 object-cover"
         />
