@@ -41,12 +41,12 @@ const Shipping = () => {
     <div className="container mx-auto px-4 py-8">
       <ProgressSteps step1 step2 />
       <div className="max-w-2xl mx-auto mt-8">
-        <form onSubmit={submitHandler} className="bg-white p-6 rounded-lg shadow-md">
+        <form onSubmit={submitHandler} className="bg-gray-800 p-6 rounded-lg shadow-md">
           <h1 className="text-2xl font-semibold mb-6">Shipping Information</h1>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-gray-700 mb-2">Address</label>
+              <label className="block text-white mb-2">Address</label>
               <input
                 type="text"
                 className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -59,7 +59,7 @@ const Shipping = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 mb-2">City</label>
+                <label className="block text-white mb-2">City</label>
                 <input
                   type="text"
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -71,7 +71,7 @@ const Shipping = () => {
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Postal Code</label>
+                <label className="block text-white mb-2">Postal Code</label>
                 <input
                   type="text"
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -84,7 +84,7 @@ const Shipping = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Country</label>
+              <label className="block text-white mb-2">Country</label>
               <input
                 type="text"
                 className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -96,7 +96,7 @@ const Shipping = () => {
             </div>
 
             <div className="border-t pt-4 mt-4">
-              <label className="block text-gray-700 mb-2">Select Payment Method</label>
+              <label className="block text-white mb-2">Select Payment Method</label>
               <div className="mt-2">
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
@@ -107,7 +107,7 @@ const Shipping = () => {
                     checked={paymentMethod === "Razorpay"}
                     onChange={(e) => setPaymentMethod(e.target.value)}
                   />
-                  <span className="text-gray-700">Razorpay</span>
+                  <span className="text-white">Razorpay</span>
                 </label>
               </div>
             </div>

@@ -102,34 +102,34 @@ const ProductDetails = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+            <div className="flex items-center space-x-3 p-3 bg-gray-800 rounded">
               <FaStore className="text-pink-600 text-xl" />
               <div>
-                <p className="text-sm text-gray-500">Brand</p>
+                <p className="text-sm text-white">Brand</p>
                 <p className="font-semibold">{product.brand}</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+            <div className="flex items-center space-x-3 p-3 bg-gray-800 rounded">
               <FaClock className="text-pink-600 text-xl" />
               <div>
-                <p className="text-sm text-gray-500">Added</p>
+                <p className="text-sm text-white">Added</p>
                 <p className="font-semibold">{moment(product.createAt).fromNow()}</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+            <div className="flex items-center space-x-3 p-3 bg-gray-800 rounded">
               <FaStar className="text-pink-600 text-xl" />
               <div>
-                <p className="text-sm text-gray-500">Reviews</p>
+                <p className="text-sm text-white">Reviews</p>
                 <p className="font-semibold">{product.numReviews}</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+            <div className="flex items-center space-x-3 p-3 bg-gray-800 rounded">
               <FaBox className="text-pink-600 text-xl" />
               <div>
-                <p className="text-sm text-gray-500">In Stock</p>
+                <p className="text-sm text-white">In Stock</p>
                 <p className="font-semibold">{product.countInStock}</p>
               </div>
             </div>
@@ -140,7 +140,7 @@ const ProductDetails = () => {
             <select
               value={qty}
               onChange={(e) => setQty(e.target.value)}
-              className="p-3 w-24 border rounded-lg bg-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              className="p-3 w-24 border text-black rounded-lg bg-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               disabled={product.countInStock === 0}
             >
               {[...Array(product.countInStock).keys()].map((x) => (
