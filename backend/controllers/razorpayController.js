@@ -30,8 +30,8 @@ const createRazorpayOrder = async (req, res) => {
     console.log("Converted amount (paise/cents):", amount);
 
     const options = {
-      amount: amount,
-      currency: "USD",
+      amount: amount * 100,
+      currency: "INR",
       receipt: orderId,
       notes: {
         orderId: orderId,
