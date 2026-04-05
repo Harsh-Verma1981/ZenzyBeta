@@ -66,6 +66,11 @@ const _dirname = path.resolve()
 // app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')))
 app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
 
+// Tell Express to serve the folder
+app.use("/uploads", express.static(uploadsPath));
+
+// DEBUG LOG (Optional): Add this temporarily to see where the server is looking
+console.log("Serving static files from:", uploadsPath);
 
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
