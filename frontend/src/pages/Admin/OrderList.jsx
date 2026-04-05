@@ -39,7 +39,7 @@ const OrderList = ({ embedded = false }) => {
                 <td className="px-4 py-3">
                   {order.orderItems.length > 0 && (
                     <img
-                      src={order.orderItems[0].image}
+                      src={"https://zenzloom-fg7a.onrender.com" + order.orderItems[0].image}
                       alt={order._id}
                       className="w-14 h-14 object-cover rounded"
                     />
