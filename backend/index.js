@@ -61,10 +61,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const _dirname = path.resolve()
+const _dirname = path.resolve();
 
-// app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')))
-app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
+app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
 
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
