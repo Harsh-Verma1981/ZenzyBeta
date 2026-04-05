@@ -63,7 +63,7 @@ app.use(cookieParser());
 
 const _dirname = path.resolve()
 
-app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')))
+app.use('/uploads', express.static(path.join(_dirname, '/uploads')))
 
 
 app.use("/api/users", userRoutes);
