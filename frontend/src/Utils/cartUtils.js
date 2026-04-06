@@ -3,18 +3,22 @@ export const addDecimals = (num) => {
 };
 
 export const updateCart = (state) => {
-  // Calculate the items price
+  // 1. Calculate the items price (Force Number on qty)
   state.itemsPrice = addDecimals(
-    state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    state.cartItems.reduce(
+      (acc, item) => acc + item.price * Number(item.qty), 
+      0
+    )
   );
 
-  // Calculate the shipping price
-  state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
+  // 2. Calculate the shipping price
+  // Using Number(state.itemsPrice) because toFixed(2) returns a string
+  state.shippingPrice = addDecimals(Number(state.itemsPrice) > 100 ? 0 : 10);
 
-  // Calculate the tax price
-  state.taxPrice = addDecimals(Number((0.15 * state.itemsPrice).toFixed(2)));
+  // 3. Calculate the tax price (15% tax)
+  state.taxPrice = addDecimals(Number((0.15 * Number(state.itemsPrice)).toFixed(2)));
 
-  // Calculate the total price
+  // 4. Calculate the total price
   state.totalPrice = (
     Number(state.itemsPrice) +
     Number(state.shippingPrice) +
