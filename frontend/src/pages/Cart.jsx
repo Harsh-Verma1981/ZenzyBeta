@@ -40,62 +40,69 @@ const Cart = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Cart Items */}
           <div className="w-full lg:w-2/3">
-            {cartItems.map((item) => (
-              <div
-                key={item._id}
-                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4 p-4 rounded-lg bg-gray-800 shadow-sm"
-              >
-                <div className="w-full sm:w-20 h-20 flex-shrink-0">
-                  <img
-                    src={"https://zenzloom-fg7a.onrender.com" + item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover rounded"
-                  />
-                </div>
+            {cartItems.map((item) => {
+              // --- SMART IMAGE LOGIC ---
+              const imageSrc = item.image.startsWith("http")
+                ? item.image
+                : "https://zenzloom-fg7a.onrender.com" + item.image;
 
-                <div className="flex-1 min-w-0">
-                  <Link
-                    to={`/product/${item._id}`}
-                    className="text-pink-600 hover:text-pink-700 font-semibold text-sm md:text-base"
-                  >
-                    {item.name}
-                  </Link>
-                  <div className="text-white text-sm mt-1">{item.brand}</div>
-                  <div className="text-black font-bold text-base md:text-lg mt-1">
-                    ${item.price.toFixed(2)}
+              return (
+                <div
+                  key={item._id}
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4 p-4 rounded-lg bg-gray-800 shadow-sm"
+                >
+                  <div className="w-full sm:w-20 h-20 flex-shrink-0">
+                    <img
+                      src={imageSrc} // Updated to use the smart variable
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded"
+                    />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <Link
+                      to={`/product/${item._id}`}
+                      className="text-pink-600 hover:text-pink-700 font-semibold text-sm md:text-base"
+                    >
+                      {item.name}
+                    </Link>
+                    <div className="text-white text-sm mt-1">{item.brand}</div>
+                    <div className="text-pink-500 font-bold text-base md:text-lg mt-1">
+                      ${item.price.toFixed(2)}
+                    </div>
+                  </div>
+
+                  <div className="w-full sm:w-auto">
+                    <select
+                      className="w-full sm:w-20 p-2 border rounded text-black bg-white"
+                      value={item.qty}
+                      onChange={(e) =>
+                        addToCartHandler(item, Number(e.target.value))
+                      }
+                    >
+                      {[...Array(item.countInStock).keys()].map((x) => (
+                        <option key={x + 1} value={x + 1}>
+                          {x + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center">
+                    <button
+                      className="text-red-500 hover:text-red-700 p-2"
+                      onClick={() => removeFromCartHandler(item._id)}
+                    >
+                      <FaTrash size={18} />
+                    </button>
                   </div>
                 </div>
-
-                <div className="w-full sm:w-auto">
-                  <select
-                    className="w-full sm:w-20 p-2 border rounded text-black bg-white"
-                    value={item.qty}
-                    onChange={(e) =>
-                      addToCartHandler(item, Number(e.target.value))
-                    }
-                  >
-                    {[...Array(item.countInStock).keys()].map((x) => (
-                      <option key={x + 1} value={x + 1}>
-                        {x + 1}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center">
-                  <button
-                    className="text-red-500 hover:text-red-700 p-2"
-                    onClick={() => removeFromCartHandler(item._id)}
-                  >
-                    <FaTrash size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Order Summary */}
-          <div className="w-full lg:w-1/3">
+          {/* Order Summary Section */}
+          <div className="w-full lg:w-1/3 text-white">
             <div className="bg-gray-800 p-6 rounded-lg shadow-sm">
               <h2 className="text-xl font-semibold mb-4">
                 Order Summary
@@ -122,8 +129,8 @@ const Cart = () => {
                   <span className="font-semibold">$ {cart.taxPrice}</span>
                 </div>
 
-                <div className="border-t pt-3 mt-3">
-                  <div className="flex justify-between text-xl font-bold">
+                <div className="border-t border-gray-700 pt-3 mt-3">
+                  <div className="flex justify-between text-xl font-bold text-pink-600">
                     <span>Total</span>
                     <span>${cart.totalPrice}</span>
                   </div>

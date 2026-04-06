@@ -35,7 +35,7 @@ const ProductCarousel = () => {
       ) : (
         <Slider
           {...settings}
-          className="w-full max-w-full overflow-hidden" // Removed fixed rem widths
+          className="w-full max-w-full overflow-hidden"
         >
           {products.map(
             ({
@@ -50,57 +50,64 @@ const ProductCarousel = () => {
               rating,
               quantity,
               countInStock,
-            }) => (
-              <div key={_id} className="px-2">
-                <img
-                  src={"https://zenzloom-fg7a.onrender.com" + image}
-                  alt={name}
-                  className="w-full rounded-lg object-cover h-[20rem] md:h-[30rem]"
-                />
+            }) => {
+              // --- SMART IMAGE LOGIC FOR CAROUSEL ---
+              const imageSrc = image.startsWith("http")
+                ? image // Cloudinary URL
+                : "https://zenzloom-fg7a.onrender.com" + image; // Local Render Path
 
-                {/* Container for text details */}
-                <div className="mt-4 flex flex-col lg:flex-row justify-between gap-4">
-                  
-                  {/* Left Column: Name and Description */}
-                  <div className="w-full lg:w-1/2">
-                    <h2 className="text-xl font-bold text-white mb-2">{name}</h2>
-                    <p className="text-pink-500 font-semibold mb-4">$ {price}</p>
-                    <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                      {description.substring(0, 150)}...
-                    </p>
-                  </div>
+              return (
+                <div key={_id} className="px-2">
+                  <img
+                    src={imageSrc} // Updated to use the smart variable
+                    alt={name}
+                    className="w-full rounded-lg object-cover h-[20rem] md:h-[30rem]"
+                  />
 
-                  {/* Right Column: Icons/Stats */}
-                  <div className="w-full lg:w-1/2 grid grid-cols-2 gap-2 text-sm text-gray-300">
-                    <div className="space-y-4">
-                      <h1 className="flex items-center">
-                        <FaStore className="mr-2 text-pink-500" /> Brand: {brand}
-                      </h1>
-                      <h1 className="flex items-center">
-                        <FaClock className="mr-2 text-pink-500" /> Added:{" "}
-                        {moment(createdAt).fromNow()}
-                      </h1>
-                      <h1 className="flex items-center">
-                        <FaStar className="mr-2 text-pink-500" /> Reviews: {numReviews}
-                      </h1>
+                  {/* Container for text details */}
+                  <div className="mt-4 flex flex-col lg:flex-row justify-between gap-4">
+                    
+                    {/* Left Column: Name and Description */}
+                    <div className="w-full lg:w-1/2">
+                      <h2 className="text-xl font-bold text-white mb-2">{name}</h2>
+                      <p className="text-pink-500 font-semibold mb-4">$ {price}</p>
+                      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        {description.substring(0, 150)}...
+                      </p>
                     </div>
 
-                    <div className="space-y-4">
-                      <h1 className="flex items-center">
-                        <FaStar className="mr-2 text-pink-500" /> Rating: {Math.round(rating)}
-                      </h1>
-                      <h1 className="flex items-center">
-                        <FaShoppingCart className="mr-2 text-pink-500" /> Qty: {quantity}
-                      </h1>
-                      <h1 className="flex items-center">
-                        <FaBox className="mr-2 text-pink-500" /> In Stock: {countInStock}
-                      </h1>
-                    </div>
-                  </div>
+                    {/* Right Column: Icons/Stats */}
+                    <div className="w-full lg:w-1/2 grid grid-cols-2 gap-2 text-sm text-gray-300">
+                      <div className="space-y-4">
+                        <h1 className="flex items-center">
+                          <FaStore className="mr-2 text-pink-500" /> Brand: {brand}
+                        </h1>
+                        <h1 className="flex items-center">
+                          <FaClock className="mr-2 text-pink-500" /> Added:{" "}
+                          {moment(createdAt).fromNow()}
+                        </h1>
+                        <h1 className="flex items-center">
+                          <FaStar className="mr-2 text-pink-500" /> Reviews: {numReviews}
+                        </h1>
+                      </div>
 
+                      <div className="space-y-4">
+                        <h1 className="flex items-center">
+                          <FaStar className="mr-2 text-pink-500" /> Rating: {Math.round(rating)}
+                        </h1>
+                        <h1 className="flex items-center">
+                          <FaShoppingCart className="mr-2 text-pink-500" /> Qty: {quantity}
+                        </h1>
+                        <h1 className="flex items-center">
+                          <FaBox className="mr-2 text-pink-500" /> In Stock: {countInStock}
+                        </h1>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            )
+              );
+            }
           )}
         </Slider>
       )}

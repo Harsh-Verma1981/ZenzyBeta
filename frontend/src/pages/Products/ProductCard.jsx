@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { toast } from "react-toastify";
 import HeartIcon from "./HeartIcon";
-// import { BASE_URL } from "../../config.js";
 
 const ProductCard = ({ p }) => {
   const dispatch = useDispatch();
@@ -17,16 +16,22 @@ const ProductCard = ({ p }) => {
     });
   };
 
+  // 1. Logic to handle Hybrid Image Paths
+  const imageSrc = p.image.startsWith("http")
+    ? p.image // Cloudinary Full URL
+    : "https://zenzloom-fg7a.onrender.com" + p.image; // Local Legacy Path
+
   return (
-    <div className="max-w-sm relative bg-[#1A1A1A] rounded-lg shaodw dark:bg-gray-800 dark:border-gray-700">
+    <div className="max-w-sm relative bg-[#1A1A1A] rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <section className="relative">
         <Link to={`/product/${p._id}`}>
           <span className="absolute bottom-3 right-3 bg-pink-100 text-pink-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-pink-900 dark:text-pink-300">
             {p?.brand}
           </span>
+          {/* 2. Update the src to use our imageSrc variable */}
           <img
             className="cursor-pointer w-full"
-            src={"https://zenzloom-fg7a.onrender.com" + p.image}
+            src={imageSrc}
             alt={p.name}
             style={{ height: "170px", objectFit: "cover" }}
           />
@@ -36,7 +41,7 @@ const ProductCard = ({ p }) => {
 
       <div className="p-5">
         <div className="flex justify-between">
-          <h5 className="mb-2 text-xl text-whiet dark:text-white">{p?.name}</h5>
+          <h5 className="mb-2 text-xl text-white dark:text-white">{p?.name}</h5>
 
           <p className="text-black font-semibold text-pink-500">
             {p?.price?.toLocaleString("en-US", {

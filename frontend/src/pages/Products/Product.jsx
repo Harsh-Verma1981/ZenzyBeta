@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
 import HeartIcon from "./HeartIcon";
-// import {BASE_URL}  from "../../config.js";
 
 const Product = ({ product }) => {
+  // Logic to handle both old local paths and new Cloudinary URLs
+  const imageSrc = product.image.startsWith("http")
+    ? product.image // Use Cloudinary URL directly
+    : "https://zenzloom-fg7a.onrender.com" + product.image; // Use local Render path
+
   return (
     <div className="w-full p-3">
       <div className="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <img
-          src={"https://zenzloom-fg7a.onrender.com" + product.image}
+          src={imageSrc}
           alt={product.name}
           className="w-full h-64 object-cover"
         />
