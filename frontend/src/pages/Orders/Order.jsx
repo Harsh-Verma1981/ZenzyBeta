@@ -29,13 +29,11 @@ const Order = () => {
     useVerifyRazorpayPaymentMutation();
   const [deliverOrder, { isLoading: loadingDeliver }] =
     useDeliverOrderMutation();
-  const { data: razorpayConfig, error: razorpayConfigError } =
-    useGetRazorpayKeyIdQuery();
+  const { data: razorpayConfig } = useGetRazorpayKeyIdQuery();
 
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
 
-  // Load Razorpay Checkout script
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -45,7 +43,6 @@ const Order = () => {
     document.body.appendChild(script);
   }, []);
 
-  // Handle payment
   const handlePayment = async () => {
     if (!order || order.isPaid) return;
 
@@ -58,10 +55,7 @@ const Order = () => {
         return;
       }
 
-      // 1. Create order on backend
       const result = await createRazorpayOrder({ orderId: order._id }).unwrap();
-
-      // 2. FIX: Find the correct data "Box"
       const rzpData = result.order || result; 
       const actualOrderId = rzpData.id || rzpData.orderId;
 
@@ -71,7 +65,7 @@ const Order = () => {
 
       const options = {
         key: razorpayConfig.keyId,
-        amount: rzpData.amount * 100,// converting into cents
+        amount: rzpData.amount * 100,
         currency: rzpData.currency || "USD",
         name: "ZENZLOOM STORE",
         description: `Order #${order._id}`,
@@ -128,7 +122,6 @@ const Order = () => {
   return (
     <div className="container mx-auto px-4 py-8 text-white">
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Order Items Section */}
         <div className="w-full lg:w-2/3">
           <div className="bg-[#1A1A1A] rounded-lg shadow-md p-6 border border-gray-800">
             <h2 className="text-2xl font-bold mb-6">Order Details</h2>
@@ -148,21 +141,32 @@ const Order = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-700">
-                    {order.orderItems.map((item, index) => (
-                      <tr key={index}>
-                        <td className="px-4 py-3">
-                          <img src={"https://zenzloom-fg7a.onrender.com" + item.image} alt={item.name} className="w-16 h-16 object-cover rounded border border-gray-700" />
-                        </td>
-                        <td className="px-4 py-3">
-                          <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">
-                            {item.name}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-3 text-center">{item.qty}</td>
-                        <td className="px-4 py-3 text-right">${item.price.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-right">${(item.qty * item.price).toFixed(2)}</td>
-                      </tr>
-                    ))}
+                    {order.orderItems.map((item, index) => {
+                      // --- SMART IMAGE LOGIC ---
+                      const imageSrc = item.image?.startsWith("http")
+                        ? item.image
+                        : "https://zenzloom-fg7a.onrender.com" + item.image;
+
+                      return (
+                        <tr key={index}>
+                          <td className="px-4 py-3">
+                            <img 
+                              src={imageSrc} 
+                              alt={item.name} 
+                              className="w-16 h-16 object-cover rounded border border-gray-700" 
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <Link to={`/product/${item.product}`} className="text-pink-500 hover:underline">
+                              {item.name}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-3 text-center">{item.qty}</td>
+                          <td className="px-4 py-3 text-right">${item.price.toFixed(2)}</td>
+                          <td className="px-4 py-3 text-right">${(item.qty * item.price).toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -170,20 +174,24 @@ const Order = () => {
           </div>
         </div>
 
-        {/* Order Summary Sidebar */}
         <div className="w-full lg:w-1/3">
           <div className="bg-[#1A1A1A] p-6 rounded-lg shadow-sm border border-gray-800">
             <h2 className="text-xl font-bold mb-4">Shipping Info</h2>
             <div className="space-y-3 mb-6 text-sm text-gray-300">
               <p className="flex justify-between"><strong>Order ID:</strong> <span className="font-mono">{order._id}</span></p>
-              <p className="flex justify-between"><strong>Name:</strong> <span>{order.user.username}</span></p>
-              <p className="flex justify-between"><strong>Email:</strong> <span>{order.user.email}</span></p>
+              <p className="flex justify-between"><strong>Name:</strong> <span>{order.user?.username}</span></p>
+              <p className="flex justify-between"><strong>Email:</strong> <span>{order.user?.email}</span></p>
               <p className="flex justify-between"><strong>Address:</strong> <span className="text-right">{order.shippingAddress.address}, {order.shippingAddress.city}</span></p>
               <p className="flex justify-between"><strong>Payment:</strong> 
                 <span className={order.isPaid ? "text-green-500" : "text-red-500 font-bold"}>
                   {order.isPaid ? `Paid on ${new Date(order.paidAt).toLocaleDateString()}` : "Not Paid"}
                 </span>
               </p>
+              {order.isDelivered && (
+                 <p className="flex justify-between"><strong>Delivery:</strong> 
+                    <span className="text-green-500">Delivered on {new Date(order.deliveredAt).toLocaleDateString()}</span>
+                 </p>
+              )}
             </div>
 
             <h2 className="text-xl font-bold mb-4 border-t border-gray-700 pt-4">Summary</h2>
@@ -196,7 +204,6 @@ const Order = () => {
               </div>
             </div>
 
-            {/* Actions */}
             {!order.isPaid && (
               <button
                 className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-bold disabled:bg-gray-600 transition-colors"
