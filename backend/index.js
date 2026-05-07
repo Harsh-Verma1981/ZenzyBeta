@@ -23,42 +23,35 @@ connectDB();
 
 const app = express();
 
-// 1. SECURITY & CORS (Must be at the very top)
-// app.use(cors({
-//   origin: "https://zenzloom-shop.vercel.app", 
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"]
-// }));
-// 1. DYNAMIC CORS (Fixes Dev + Prod)
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    "https://zenzloom-shop.vercel.app", 
-    "http://localhost:5173"
-  ];
-  const origin = req.headers.origin;
+const app = express();
 
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
+// ✅ CORS — define once, use twice
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "https://zenzloom-shop.vercel.app",
+      "http://localhost:5173"
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT, DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Origin", "X-Requested-With", "Accept"]
+};
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  next();
-});
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ This is what was missing — preflight handler
 
-// This line handles the 'Preflight' handshake that is currently failing
-// app.options("*", cors()); 
-
-// 2. MIDDLEWARE
+// ✅ MIDDLEWARE (must come AFTER cors)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// rest of your routes...
 
 // 3. API ROUTES
 // We use an array here to catch both '/api/chat' and '/api/chat/' to prevent 404s
