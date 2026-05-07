@@ -72,7 +72,7 @@ app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')));
 // DELETE the old app.use("/api/chat", chatRoutes) for now.
 // PASTE THIS DIRECTLY in index.js to test:
 
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat/", async (req, res) => {
   try {
     const { message } = req.body;
     const { GoogleGenerativeAI } = await import("@google/generative-ai");
