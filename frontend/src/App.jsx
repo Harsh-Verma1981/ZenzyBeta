@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navigation from "./pages/Auth/Navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import AIChatBot from "./components/ChatBot";
 // const App = () => {
 //   return (
 //     <div className="flex min-h-screen">
@@ -27,6 +27,7 @@ const App = () => {
       <main className="flex-1 lg:ml-64 min-w-0 py-3 bg-gray-950 text-white"> 
         <Outlet />
       </main>
+      <AIChatBot /> {/* <--- It stays here, visible on all pages */}
     </div>
   );
 };

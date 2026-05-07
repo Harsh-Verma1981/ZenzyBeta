@@ -15,6 +15,7 @@ import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import razorpayRoutes from "./routes/razorpayRoutes.js";
+import chatRoutes from "./routes/chatRoute.js";
 
 const port = process.env.PORT || 5000;
 
@@ -66,6 +67,7 @@ const _dirname = path.resolve();
 app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')));
 // app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
 
+app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
