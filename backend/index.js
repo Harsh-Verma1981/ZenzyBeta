@@ -23,7 +23,7 @@ connectDB();
 
 const app = express();
 
-const app = express();
+// const app = express();
 
 // ✅ CORS — define once, use twice
 const corsOptions = {
