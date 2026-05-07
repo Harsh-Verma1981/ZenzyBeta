@@ -24,12 +24,26 @@ connectDB();
 const app = express();
 
 // 1. SECURITY & CORS (Must be at the very top)
-app.use(cors({
-  origin: "https://zenzloom-shop.vercel.app", 
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// app.use(cors({
+//   origin: "https://zenzloom-shop.vercel.app", 
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"]
+// }));
+
+// REPLACE your current CORS block with this:
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://zenzloom-shop.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Handle the Preflight (OPTIONS) request immediately
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 // This line handles the 'Preflight' handshake that is currently failing
 app.options("*", cors()); 
