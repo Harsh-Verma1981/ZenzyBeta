@@ -65,12 +65,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api/chat", chatRoutes);
 const _dirname = path.resolve();
 
 app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')));
 // app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
+// DELETE the old app.use("/api/chat", chatRoutes) for now.
+// PASTE THIS DIRECTLY in index.js to test:
 
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { message } = req.body;
+    const { GoogleGenerativeAI } = await import("@google/generative-ai");
+    
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const result = await model.generateContent(message);
+    const response = await result.response;
+    res.json({ reply: response.text() });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
