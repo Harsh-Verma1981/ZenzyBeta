@@ -12,7 +12,7 @@ export const chatWithAI = async (req, res) => {
 
     // 2. Initialize INSIDE the function to ensure the key is fresh
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `You are ZenzBot, the friendly AI assistant for the e-commerce store "Zenzloom". 
     Your goal is to help customers with their queries. Be professional and concise. 

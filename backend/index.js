@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 });
 
 // This line handles the 'Preflight' handshake that is currently failing
-app.options("*", cors()); 
+// app.options("*", cors()); 
 
 // 2. MIDDLEWARE
 app.use(express.json());
