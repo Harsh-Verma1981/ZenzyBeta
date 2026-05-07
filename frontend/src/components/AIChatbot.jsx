@@ -27,7 +27,7 @@ const AIChatBot = () => {
 
     try {
       // Replace with your actual backend URL when testing locally vs production
-      const { data } = await axios.post("/api/chat", { message: input });
+      const { data } = await axios.post("https://zenzloom-backend.onrender.com/api/chat", { message: input });
       setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);
     } catch (error) {
       setMessages((prev) => [...prev, { role: "ai", text: "Sorry, I'm having trouble connecting. Try again later!" }]);
