@@ -22,74 +22,43 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://zenzloom-shop.vercel.app",
-  "https://zenzloom-shop.vercel.app/" // Added with slash just in case
-];
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // 1. Allow internal/mobile/tool requests (no origin)
-//     if (!origin) return callback(null, true);
-    
-//     // 2. Check if the origin matches our list
-//     if (allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       // 3. Fallback: If it's a sub-domain of your Vercel site, allow it
-//       if (origin.includes("zenzloom-shop.vercel.app")) {
-//         callback(null, true);
-//       } else {
-//         console.log("Blocked by CORS:", origin); // This helps you debug in Render logs
-//         callback(new Error('Not allowed by CORS'));
-//       }
-//     }
-//   },
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"]
-// }));
-
+// 1. SECURITY & CORS (Must be at the very top)
 app.use(cors({
-  origin: "https://zenzloom-shop.vercel.app", // Your live site
+  origin: "https://zenzloom-shop.vercel.app", 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Add this line immediately after the app.use(cors(...))
-app.options("*", cors());
+// This line handles the 'Preflight' handshake that is currently failing
+app.options("*", cors()); 
 
+// 2. MIDDLEWARE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const _dirname = path.resolve();
-
-app.use('/uploads', express.static(path.join(_dirname, '/backend/uploads')));
-// app.use('/uploads', express.static(path.join(__dirname, 'backend', 'uploads')));
-// DELETE the old app.use("/api/chat", chatRoutes) for now.
-// PASTE THIS DIRECTLY in index.js to test:
-
-app.post("/api/chat/", async (req, res) => {
+// 3. API ROUTES
+// We use an array here to catch both '/api/chat' and '/api/chat/' to prevent 404s
+app.post(["/api/chat", "/api/chat/"], async (req, res) => {
   try {
     const { message } = req.body;
     const { GoogleGenerativeAI } = await import("@google/generative-ai");
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    // Using gemini-1.5-flash as the stable production model name
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent(message);
     const response = await result.response;
     res.json({ reply: response.text() });
   } catch (error) {
-    console.error(error);
+    console.error("AI Error:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
@@ -101,7 +70,9 @@ app.get("/api/config/razorpay", (req, res) => {
   res.send({ keyId: process.env.RAZORPAY_KEY_ID });
 });
 
+// 4. STATIC FILES (Moved to the bottom to avoid interfering with API routes)
 const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname + "/uploads")));
+app.use('/uploads', express.static(path.join(__dirname, '/backend/uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.listen(port, () => console.log(`Server running on port: ${port}`));
