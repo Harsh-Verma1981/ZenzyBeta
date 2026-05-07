@@ -15,7 +15,7 @@ import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import razorpayRoutes from "./routes/razorpayRoutes.js";
-import chatRoutes from "./routes/chatRoute.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 const port = process.env.PORT || 5000;
 
@@ -57,6 +57,9 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// Add this line immediately after the app.use(cors(...))
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
