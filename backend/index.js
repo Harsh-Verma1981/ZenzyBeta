@@ -73,24 +73,25 @@ app.use(cookieParser());
 //   }
 // });
 
-app.post(["/api/chat", "/api/chat/"], async (req, res) => {
-  try {
-    const { message } = req.body;
-    const { GoogleGenAI } = await import("@google/genai"); // ✅ new package
+// app.post(["/api/chat", "/api/chat/"], async (req, res) => {
+//   try {
+//     const { message } = req.body;
+//     const { GoogleGenAI } = await import("@google/genai"); // ✅ new package
     
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
-      contents: message,
-    });
+//     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+//     const response = await ai.models.generateContent({
+//       model: "gemini-2.5-flash",
+//       contents: message,
+//     });
 
-    res.json({ reply: response.text }); // ✅ .text not .text()
-  } catch (error) {
-    console.error("AI Error:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     res.json({ reply: response.text }); // ✅ .text not .text()
+//   } catch (error) {
+//     console.error("AI Error:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
+app.use("/api/chat", chatRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);

@@ -12,7 +12,7 @@ export const chatWithAI = async (req, res) => {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-2.5-flash",
       contents: `You are ZenzBot, the friendly AI assistant for the e-commerce store "Zenzloom". 
       Your goal is to help customers with their queries. Be professional and concise. 
       Customer Query: ${message}`,
