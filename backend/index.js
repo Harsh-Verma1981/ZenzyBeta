@@ -80,7 +80,7 @@ app.post(["/api/chat", "/api/chat/"], async (req, res) => {
     
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-lite",
+      model: "gemini-2.5-flash-lite",
       contents: message,
     });
 
