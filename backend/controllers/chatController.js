@@ -18,7 +18,7 @@ export const chatWithAI = async (req, res) => {
       Customer Query: ${message}`,
     });
 
-    res.json({ reply: response.text });
+    res.json({ reply: response.text() });
   } catch (error) {
     console.error("Gemini Error:", error);
     res.status(500).json({ message: "AI assistant is currently offline." });
