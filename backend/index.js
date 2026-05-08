@@ -58,7 +58,7 @@ app.use(cookieParser());
 app.post(["/api/chat", "/api/chat/"], async (req, res) => {
   try {
     const { message } = req.body;
-    const { GoogleGenerativeAI } = await import("@google/generative-ai");
+    const { GoogleGenerativeAI } = await import("@google/genai");
     
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     // Using gemini-1.5-flash as the stable production model name
