@@ -55,18 +55,36 @@ app.use(cookieParser());
 
 // 3. API ROUTES
 // We use an array here to catch both '/api/chat' and '/api/chat/' to prevent 404s
+// app.post(["/api/chat", "/api/chat/"], async (req, res) => {
+//   try {
+//     const { message } = req.body;
+//     const { GoogleGenerativeAI } = await import("@google/genai");
+    
+//     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+//     // Using gemini-1.5-flash as the stable production model name
+//     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+//     const result = await model.generateContent(message);
+//     const response = await result.response;
+//     res.json({ reply: response.text() });
+//   } catch (error) {
+//     console.error("AI Error:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
 app.post(["/api/chat", "/api/chat/"], async (req, res) => {
   try {
     const { message } = req.body;
-    const { GoogleGenerativeAI } = await import("@google/genai");
+    const { GoogleGenAI } = await import("@google/genai"); // ✅ new package
     
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // Using gemini-1.5-flash as the stable production model name
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: message,
+    });
 
-    const result = await model.generateContent(message);
-    const response = await result.response;
-    res.json({ reply: response.text() });
+    res.json({ reply: response.text }); // ✅ .text not .text()
   } catch (error) {
     console.error("AI Error:", error);
     res.status(500).json({ error: error.message });
