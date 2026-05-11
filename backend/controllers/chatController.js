@@ -1,26 +1,46 @@
-import { GoogleGenAI } from "@google/genai";
+import axios from "axios";
 
 export const chatWithAI = async (req, res) => {
   const { message } = req.body;
 
-  try {
-    if (!process.env.GEMINI_API_KEY) {
-      console.error("Key is missing in environment variables!");
-      return res.status(500).json({ message: "Server configuration error." });
-    }
+  // ✅ PASTE IT HERE
+  if (!message || typeof message !== "string" || message.length > 1000) {
+    return res.status(400).json({ message: "Invalid input" });
+  }
 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: `You are ZenzBot, the friendly AI assistant for the e-commerce store "Zenzloom". 
-      Your goal is to help customers with their queries. Be professional and concise. 
-      Customer Query: ${message}`,
+  try {
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "meta-llama/llama-3-8b-instruct",
+        messages: [
+          {
+            role: "system",
+            content: "You are ZenzBot...",
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json({
+      reply: response.data.choices[0].message.content,
     });
 
-    res.json({ reply: response.text() });
   } catch (error) {
-    console.error("Gemini Error:", error);
-    res.status(500).json({ message: "AI assistant is currently offline." });
+    console.error("ERROR:", error.response?.data || error.message);
+
+    res.status(500).json({
+      message: "AI assistant is currently unavailable",
+    });
   }
 };
